@@ -1,13 +1,12 @@
 class CreateListings < ActiveRecord::Migration[6.1]
   def change
     create_table :listings do |t|
-      t.belongs_to :user, null: false, foreign_key: true
+      t.belongs_to :landlord, foreign_key: {to_table: :users}, index:true
+
+      t.string :title
       t.text :description
       t.integer :price
-      t.integer :surface
-      t.string :location
-      t.string :title
-      t.boolean :status
+      t.integer :status
 
       t.timestamps
     end
