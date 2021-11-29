@@ -9,8 +9,12 @@ class UsersController < ApplicationController
   end
 
   def show
-    @avatar = rails_blob_path(@user.avatar)
-    render json: {user:@user, avatar:@avatar}
+    if @user.avatar.attached?
+      avatar = rails_blob_path(@user.avatar)
+      render json: {user: @user, avatar: avatar}
+    else 
+      render json: {user: @user}
+    end
     # @avatar = rails_blob_path(@user.avatar)
     # render json: {user:@user, avatar:@avatar}
   end
