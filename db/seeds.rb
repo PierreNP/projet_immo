@@ -1,11 +1,21 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
+User.destroy_all
+Place.destroy_all
+Listing.destroy_all
+Amenity.destroy_all
+TableJointPlaceAmenity.destroy_all
 
-user = User.create(email:"caca@caca.pipi", password:"jaimelepipi")
+['users', 'places', 'listings', 'amenities', 'table_joint_place_amenities'].map { |tab| ActiveRecord::Base.connection.reset_pk_sequence!(tab) }
 
-user.avatar.attach(io: File.open("app/assets/test.jpg"), filename: "test")
+
+tab_place = ["studio", "small_apartment", "big_apartment", "small_house", "big_house"]
+
+30.times do |i|
+  user = User.create(email:"email#{i}@gmail.com", password:"123456", first_name:Faker::Name.first_name, last_name:Faker::Name.last_name, username:Faker::Internet.username)
+  [1,1,1,1,1,2][rand(0..5)].times do
+    place = Place.create(place_type:tab_place[rand(0..tab_place.length - 1)], surface:rand(15..200), story:rand(0..6), location:Faker::Address.street_address)
+    listing = Listing.create(landlord:user, place:place, title:"Amazing place to sell! #{i}", description:"description of place #{i}", price:place.surface*rand(7..13)*1000)
+    amenity = Amenity.create(has_swimming_pool:[true, false, false][rand(0..2)],has_garden:[true, false, false][rand(0..2)], has_balcony:[true, false, false][rand(0..2)], has_terrace:[true, false, false][rand(0..2)],has_elevator:[true, false, false][rand(0..2)],has_concierge:[true, false, false][rand(0..2)],is_last_floor:[true, false, false][rand(0..2)])
+    tablejointplaceamenity = TableJointPlaceAmenity.create(place:place, amenity:amenity)
+  end
+end
+
