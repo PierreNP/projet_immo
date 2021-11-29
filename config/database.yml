@@ -82,5 +82,3 @@ test:
 production:
   <<: *default
   database: THP_IMMO_API_production
-  username: THP_IMMO_API
-  password: <%= ENV['THP_IMMO_API_DATABASE_PASSWORD'] %>
