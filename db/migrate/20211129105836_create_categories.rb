@@ -12,7 +12,6 @@ class CreateCategories < ActiveRecord::Migration[6.1]
       t.boolean :concierge
       t.boolean :terrace
       t.integer :story
-
       t.timestamps
     end
   end
