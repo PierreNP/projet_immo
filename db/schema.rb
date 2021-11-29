@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_29_102524) do
+ActiveRecord::Schema.define(version: 2021_11_29_110016) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,10 +43,48 @@ ActiveRecord::Schema.define(version: 2021_11_29_102524) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "categories", force: :cascade do |t|
+    t.boolean "house"
+    t.boolean "studio"
+    t.boolean "t2"
+    t.boolean "t3"
+    t.boolean "garden"
+    t.boolean "balcony"
+    t.boolean "swimming_pool"
+    t.boolean "elevator"
+    t.boolean "concierge"
+    t.boolean "terrace"
+    t.integer "story"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "jwt_denylist", force: :cascade do |t|
     t.string "jti", null: false
     t.datetime "exp", null: false
     t.index ["jti"], name: "index_jwt_denylist_on_jti"
+  end
+
+  create_table "listings", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.text "description"
+    t.integer "price"
+    t.integer "surface"
+    t.string "location"
+    t.string "title"
+    t.boolean "status"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_listings_on_user_id"
+  end
+
+  create_table "table_joint_listing_categories", force: :cascade do |t|
+    t.bigint "listing_id"
+    t.bigint "category_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["category_id"], name: "index_table_joint_listing_categories_on_category_id"
+    t.index ["listing_id"], name: "index_table_joint_listing_categories_on_listing_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -68,4 +106,5 @@ ActiveRecord::Schema.define(version: 2021_11_29_102524) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "listings", "users"
 end
