@@ -6,6 +6,7 @@ class Users::SessionsController < Devise::SessionsController
   def respond_with(resource, _opts = {})
     @user = User.find_by(email:resource.email)
     if(@user && @user.encrypted_password == resource.encrypted_password)
+      puts @user.encrypted_password == resource.encrypted_password
       render json: { user:resource, message: 'You are logged in.' }, status: :ok
     elsif(@user)
       render json: { message: 'Incorrect Password' }, status: :unauthorized
