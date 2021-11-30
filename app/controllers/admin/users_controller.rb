@@ -3,41 +3,39 @@ class Admin::UsersController < ApplicationController
   before_action :is_admin?
   before_action :set_user, only: [:show, :update, :destroy]
 
-
   def index
     @all_users = User.all
+    render json: {users: @all_users}
   end
 
   def show
-    puts current_user
-    puts current_user.id
-  end
-
-  def new
-    @user = User.new
+    render json: {user: @user}
   end
 
   def create
-    puts params
+    byebug
     @user = User.create(admin_user_params)
     if @user.save
-      redirect_to admin_users_path
+      render json: {message: "User successfully created"}
+    else
+      render json: {message: "User unsuccessfully created"}
     end
-    #else, blablabla
-  end
-
-  def edit
-    @user = User.find(params[:id])
   end
 
   def update
-    @user = User.find(params[:id])
-    @user.update(admin_user_params)
-    redirect_to admin_users_path
+    if @user.update(admin_user_params)
+      render json: {message: "User successfully updated"}
+    else
+      render json: {message: "Update error"}
+    end
   end
 
   def destroy
-    @user.destroy
+    if @user.destroy
+      render json: {message: "User successfully deleted (you are admin, you do what you want)"}
+    else
+      render json: {message: "User NOT successfully deleted (you are admin, you do what you want but it still didn't work)"}
+    end
   end 
 
   private

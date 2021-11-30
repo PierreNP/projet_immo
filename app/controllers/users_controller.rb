@@ -8,6 +8,16 @@ class UsersController < ApplicationController
     render json: @users
   end
 
+  def create
+    puts "💋"*20
+    puts "je suis dans create"
+    byebug
+    puts params
+    puts "💋"*20
+    @user = User.create(user_params)
+  end
+
+
   def show
     if @user.avatar.attached?
       avatar = rails_blob_path(@user.avatar)
@@ -21,19 +31,23 @@ class UsersController < ApplicationController
 
   def update
     # byebug
-    if params[:avatar]
-      @user.update(avatar: params[:avatar])
-      avatar = rails_blob_path(@user.avatar)
-      render json: {user: @user, avatar: avatar}
-    elsif @user.update(user_params)
-      if @user.avatar.attached?
+    if current_user == @user
+      if params[:avatar]
+        @user.update(avatar: params[:avatar])
         avatar = rails_blob_path(@user.avatar)
         render json: {user: @user, avatar: avatar}
-      else 
-        render json: {user: @user}
+      elsif @user.update(user_params)
+        if @user.avatar.attached?
+          avatar = rails_blob_path(@user.avatar)
+          render json: {user: @user, avatar: avatar}
+        else 
+          render json: {user: @user}
+        end
+      else
+        render json: @user.errors, status: :unprocessable_entity
       end
     else
-      render json: @user.errors, status: :unprocessable_entity
+      render json: {message: "As a normal user (not admin), you are not allowed to update other users than yourself"}
     end
     # if @user.update(user_params)
     #   render json: {user:@user}
@@ -43,6 +57,9 @@ class UsersController < ApplicationController
   def destroy
     if current_user == @user
       @user.destroy
+      render json: {message: "User (not admin) successfully deleted"}
+    else
+      render json: {message: "As a normal user (not admin), you are not allowed to delete other users than yourself"}
     end
   end
 
