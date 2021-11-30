@@ -1,25 +1,19 @@
 class ListingsController < ApplicationController
   before_action :set_listing, only: [:show, :update, :destroy]
-  before_action :authenticate_user!, only: [:create, :show, :update, :destroy]
+  before_action :authenticate_user!, only: [:create, :update, :destroy]
 
   # GET /listings
   def index
     @listings = Listing.all
-      @listings_with_images = []
+      @listings_with_informations = []
       @listings.each do |listing|
         @listing_images = []
         listing.images.each do |image|
-          puts "*" * 10
-          puts rails_blob_path(image)
-          puts "*" * 10
           @listing_images << rails_blob_path(image)
         end 
-        @listings_with_images << {listing: listing, images: @listing_images}
-        puts "*" * 10
-        puts @listings_with_images
-        puts "*" * 10
+        @listings_with_informations << {listing: listing, place:listing.place, amenity:listing.place.amenities, images: @listing_images}
       end 
-      render json: @listings_with_images
+      render json: @listings_with_informations
   end
 
   # GET /listings/1
@@ -28,13 +22,18 @@ class ListingsController < ApplicationController
     @listing.images.each do |image|
       @listing_images << rails_blob_path(image)
     end 
-    render json: {listing:@listing, images:@listing_images}
+    render json: {listing:@listing, place: @listing.place, amenity:@listing.place.amenities, images:@listing_images}
   end
 
   # POST /listings
   def create
     @listing = Listing.new(listing_params)
-    @listing.user_id = current_user.id
+    @place= Place.create(place_params)
+    @amenity = Amenity.create(amenity_params)
+    TableJointPlaceAmenity.create(place:@place, amenity:@amenity)
+    @listing.landlord = current_user
+    @listing.place = @place
+
     @listing_images = []
     if params[:images]
       @listing.images.attach(io: File.open(params[:images]), filename: 'file.pdf')
@@ -43,8 +42,7 @@ class ListingsController < ApplicationController
       end 
     end 
     if @listing.save
-
-      render json: {listing:@listing, images:@listing_images}, status: :created, location: @listing
+      render json: {listing:@listing, place: @place, amenity:@amenity, images:@listing_images}, status: :created, location: @listing
     else
       render json: @listing.errors, status: :unprocessable_entity
     end
@@ -52,23 +50,21 @@ class ListingsController < ApplicationController
 
   # PATCH/PUT /listings/1
   def update
+    @listing.place.update(place_params)
+    @listing.place.amenities.update(amenity_params) 
     @listing_images = []
     if params[:images]
-      puts "*"*100
-      puts"j'ai une image"
-      puts params[:images]
-      puts "*"*100
       @listing.update(images: params[:images])
       @listing.images.each do |image|
         @listing_images << rails_blob_path(image)
       end 
       render json: {listing:@listing, images:@listing_images}
-    elsif @listing.user_id == current_user.id && @listing.update(listing_params)
+    elsif @listing.landlord == current_user && @listing.update(listing_params)
       @listing.images.each do |image|
         @listing_images << rails_blob_path(image)
       end 
-      render json: {listing:@listing, images:@listing_images}
-    elsif @listing.user_id != current_user.id
+      render json: {listing:@listing, place:@listing.place, amenity:@listing.place.amenities , images:@listing_images}
+    elsif @listing.landlord != current_user
       render json: { message: "You are not author of this listing !"}, status: :unauthorized
     else
       render json: @listing.errors, status: :unprocessable_entity
@@ -77,10 +73,11 @@ class ListingsController < ApplicationController
 
   # DELETE /listings/1
   def destroy
-    if @listing.user_id == current_user.id
+    if @listing.landlord == current_user
       @listing.destroy
+      render json: { message: "The listing has been successfully deleted ! "}
     else 
-      render json: { message: "Vous n'êtes pas l'auteur de ce post"}, status: :unauthorized
+      render json: { message: "You are not landlord of this listing, you can't delete it !"}, status: :unauthorized
     end 
   end
 
@@ -92,6 +89,12 @@ class ListingsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def listing_params
-      params.require(:listing).permit(:user_id, :description, :price, :surface, :location, :title, :status, :images)
+      params.require(:listing).permit(:landlord_id, :place, :amenity, :description, :price, :surface, :location, :title, :status, :images)
     end
+    def place_params
+      params.require(:place).permit(:place_type, :surface, :story, :location)
+    end 
+    def amenity_params
+      params.require(:amenity).permit(:has_swimming_pool, :has_balcony, :has_concierge, :has_garden, :has_elevator, :is_last_floor, :has_terrace)
+    end 
 end
