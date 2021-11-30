@@ -55,6 +55,22 @@ ActiveRecord::Schema.define(version: 2021_11_29_182858) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "categories", force: :cascade do |t|
+    t.boolean "house"
+    t.boolean "studio"
+    t.boolean "t2"
+    t.boolean "t3"
+    t.boolean "garden"
+    t.boolean "balcony"
+    t.boolean "swimming_pool"
+    t.boolean "elevator"
+    t.boolean "concierge"
+    t.boolean "terrace"
+    t.integer "story"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "jwt_denylist", force: :cascade do |t|
     t.string "jti", null: false
     t.datetime "exp", null: false
@@ -62,16 +78,18 @@ ActiveRecord::Schema.define(version: 2021_11_29_182858) do
   end
 
   create_table "listings", force: :cascade do |t|
-    t.bigint "landlord_id"
-    t.string "title"
+    t.bigint "user_id", null: false
     t.text "description"
     t.integer "price"
-    t.integer "status"
+    t.integer "surface"
+    t.string "location"
+    t.string "title"
+    t.boolean "status"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "place_id"
-    t.index ["landlord_id"], name: "index_listings_on_landlord_id"
     t.index ["place_id"], name: "index_listings_on_place_id"
+    t.index ["user_id"], name: "index_listings_on_user_id"
   end
 
   create_table "places", force: :cascade do |t|
@@ -81,6 +99,15 @@ ActiveRecord::Schema.define(version: 2021_11_29_182858) do
     t.string "location"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "table_joint_listing_categories", force: :cascade do |t|
+    t.bigint "listing_id"
+    t.bigint "category_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["category_id"], name: "index_table_joint_listing_categories_on_category_id"
+    t.index ["listing_id"], name: "index_table_joint_listing_categories_on_listing_id"
   end
 
   create_table "table_joint_place_amenities", force: :cascade do |t|
@@ -111,5 +138,5 @@ ActiveRecord::Schema.define(version: 2021_11_29_182858) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "listings", "users", column: "landlord_id"
+  add_foreign_key "listings", "users"
 end
