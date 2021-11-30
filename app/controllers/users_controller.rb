@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-
+  before_action :authenticate_user!
   before_action :set_user, only: [:show, :update, :destroy]
   respond_to :json
 
@@ -15,12 +15,9 @@ class UsersController < ApplicationController
     else 
       render json: {user: @user}
     end
-    # @avatar = rails_blob_path(@user.avatar)
-    # render json: {user:@user, avatar:@avatar}
   end
 
   def update
-    # byebug
     if params[:avatar]
       @user.update(avatar: params[:avatar])
       avatar = rails_blob_path(@user.avatar)
@@ -35,24 +32,15 @@ class UsersController < ApplicationController
     else
       render json: @user.errors, status: :unprocessable_entity
     end
-    # if @user.update(user_params)
-    #   render json: {user:@user}
-    # end
   end
 
   def destroy
-    @user.destroy
+    if @user.destroy
+      render json: {message: "User has been successfully deleted ! "}
+    else 
+      render json: {message: "You are not authorized to delete this user"}
+    end 
   end
-
-  # def avatar
-  #   user = User.find_by(id: params[:id])
-
-  #   if user&.avatar&.attached?
-  #     redirect_to rails_blob_url(user.avatar)
-  #   else
-  #     head :not_found
-  #   end
-  # end
 
   private
 
