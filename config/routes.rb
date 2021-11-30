@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
+  resources :places
   get 'avatars/create'
-  resources :categories
   resources :listings
   
   devise_for :users,

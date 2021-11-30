@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  place_type: 
+  surface: 1
+  story: 1
+
+two:
+  place_type: 
+  surface: 1
+  story: 1
