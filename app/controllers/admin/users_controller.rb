@@ -13,7 +13,6 @@ class Admin::UsersController < ApplicationController
   end
 
   def create
-    byebug
     @user = User.create(admin_user_params)
     if @user.save
       render json: {message: "User successfully created"}
