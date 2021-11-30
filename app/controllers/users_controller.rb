@@ -9,11 +9,6 @@ class UsersController < ApplicationController
   end
 
   def create
-    puts "💋"*20
-    puts "je suis dans create"
-    byebug
-    puts params
-    puts "💋"*20
     @user = User.create(user_params)
   end
 
