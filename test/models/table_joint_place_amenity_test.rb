@@ -1,6 +1,6 @@
 require "test_helper"
 
-class TableJointListingCategoryTest < ActiveSupport::TestCase
+class TableJointPlaceAmenityTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

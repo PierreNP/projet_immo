@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_29_110016) do
+ActiveRecord::Schema.define(version: 2021_11_29_182858) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,18 +43,14 @@ ActiveRecord::Schema.define(version: 2021_11_29_110016) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "categories", force: :cascade do |t|
-    t.boolean "house"
-    t.boolean "studio"
-    t.boolean "t2"
-    t.boolean "t3"
-    t.boolean "garden"
-    t.boolean "balcony"
-    t.boolean "swimming_pool"
-    t.boolean "elevator"
-    t.boolean "concierge"
-    t.boolean "terrace"
-    t.integer "story"
+  create_table "amenities", force: :cascade do |t|
+    t.boolean "has_swimming_pool"
+    t.boolean "has_garden"
+    t.boolean "has_balcony"
+    t.boolean "has_terrace"
+    t.boolean "has_elevator"
+    t.boolean "has_concierge"
+    t.boolean "is_last_floor"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -66,25 +62,34 @@ ActiveRecord::Schema.define(version: 2021_11_29_110016) do
   end
 
   create_table "listings", force: :cascade do |t|
-    t.bigint "user_id", null: false
+    t.bigint "landlord_id"
+    t.string "title"
     t.text "description"
     t.integer "price"
-    t.integer "surface"
-    t.string "location"
-    t.string "title"
-    t.boolean "status"
+    t.integer "status"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["user_id"], name: "index_listings_on_user_id"
+    t.bigint "place_id"
+    t.index ["landlord_id"], name: "index_listings_on_landlord_id"
+    t.index ["place_id"], name: "index_listings_on_place_id"
   end
 
-  create_table "table_joint_listing_categories", force: :cascade do |t|
-    t.bigint "listing_id"
-    t.bigint "category_id"
+  create_table "places", force: :cascade do |t|
+    t.integer "place_type"
+    t.integer "surface"
+    t.integer "story"
+    t.string "location"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["category_id"], name: "index_table_joint_listing_categories_on_category_id"
-    t.index ["listing_id"], name: "index_table_joint_listing_categories_on_listing_id"
+  end
+
+  create_table "table_joint_place_amenities", force: :cascade do |t|
+    t.bigint "place_id"
+    t.bigint "amenity_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["amenity_id"], name: "index_table_joint_place_amenities_on_amenity_id"
+    t.index ["place_id"], name: "index_table_joint_place_amenities_on_place_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -106,5 +111,5 @@ ActiveRecord::Schema.define(version: 2021_11_29_110016) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "listings", "users"
+  add_foreign_key "listings", "users", column: "landlord_id"
 end
