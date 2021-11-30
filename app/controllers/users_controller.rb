@@ -41,7 +41,9 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    @user.destroy
+    if current_user == @user
+      @user.destroy
+    end
   end
 
   # def avatar
