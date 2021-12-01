@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   devise_for :users,
              controllers: {
                  sessions: 'users/sessions',
-                 registrations: 'users/registrations'
+                 registrations: 'users/registrations',
              }
   resources :users
   post 'rails/active_storage/direct_uploads', to: 'direct_uploads#create'
@@ -15,5 +15,7 @@ Rails.application.routes.draw do
   namespace :admin do
     resources :listings, :users, :places
   end
-
+  post 'passwords/forgot', to: 'passwords#forgot'
+  post 'passwords/reset/:token', to: 'passwords#reset'
+  post 'passwords/update', to: 'passwords#update'
 end
