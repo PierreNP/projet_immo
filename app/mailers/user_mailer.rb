@@ -13,6 +13,11 @@ class UserMailer < ApplicationMailer
   def reset_password(user)
     @user = user 
     @url = "http://localhost:3000/passwords/reset/#{user.reset_password_token}"
-    mail(to: @user.email, subject: "Mot de passe oublié '")
+    mail(to: @user.email, subject: "Mot de passe oublié")
   end 
+  def listing_confirmation(user, listing)
+    @user = user
+    @url = "http://localhost:3000/listings/#{listing.id}"
+    mail(to: @user.email, subject: "Votre annonce a bien été publiée")
+  end
 end
