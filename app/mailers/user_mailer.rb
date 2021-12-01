@@ -20,4 +20,15 @@ class UserMailer < ApplicationMailer
     @url = "http://localhost:3000/listings/#{listing.id}"
     mail(to: @user.email, subject: "Votre annonce a bien été publiée")
   end
+  def listing_delete(user, listing)
+    @user = user
+    @listing = listing
+    mail(to: @user.email, subject: "Votre annonce a bien été supprimée")
+  end
+  def listing_update(user, listing)
+    @user = user
+    @listing = listing
+    @url = "http://localhost:3000/listings/#{@listing.id}"
+    mail(to: @user.email, subject: "Votre annonce a bien été modifiée")
+  end
 end
