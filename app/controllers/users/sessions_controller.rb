@@ -7,11 +7,11 @@ class Users::SessionsController < Devise::SessionsController
     puts resource 
     @user = User.find_by(email:resource.email)
     if(@user && @user.encrypted_password == resource.encrypted_password)
-      render json: { user:resource, message: 'You are logged in.' }, status: :ok
+      render json: { user:@user, message: 'You are logged in.' }, status: :ok
     elsif(@user || resource.email && resource.password)
-      render json: { message: 'Incorrect Email or Password' }, status: :unauthorized
+      render json: {user:resource, message: 'Incorrect Email or Password' }, status: :unauthorized
     else 
-      render json: { message: 'Email has been successfully confirmed !' }, status: :ok
+      render json: {user: resource, message: 'Email has been successfully confirmed !'}, status: :ok
     end 
   end
 
