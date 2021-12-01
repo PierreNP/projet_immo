@@ -4,6 +4,22 @@ class ListingsController < ApplicationController
 
   # GET /listings
   def index
+    if params[:user_id]
+      @listings = Listing.where(landlord: params[:user_id])
+      @listings_with_informations = []
+      if @listings
+      @listings.each do |listing|
+        @listing_images = []
+        listing.images.each do |image|
+          @listing_images << rails_blob_path(image)
+        end 
+        @listings_with_informations << {listing: listing, place:listing.place, amenity:listing.place.amenities, images: @listing_images}
+      end 
+      render json: @listings_with_informations
+      else  
+      render json: @listings
+      end 
+    else 
     @listings = Listing.all
       @listings_with_informations = []
       @listings.each do |listing|
@@ -14,6 +30,7 @@ class ListingsController < ApplicationController
         @listings_with_informations << {listing: listing, place:listing.place, amenity:listing.place.amenities, images: @listing_images}
       end 
       render json: @listings_with_informations
+    end 
   end
 
   # GET /listings/1
