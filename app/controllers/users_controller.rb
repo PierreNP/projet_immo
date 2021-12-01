@@ -36,6 +36,7 @@ class UsersController < ApplicationController
           avatar = rails_blob_path(@user.avatar)
           render json: {user: @user, avatar: avatar}
         else 
+          puts params
           render json: {user: @user}
         end
       else
