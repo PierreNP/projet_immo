@@ -2,7 +2,7 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable,
-  :jwt_authenticatable, :registerable, :confirmable, 
+  :jwt_authenticatable, :registerable, 
   jwt_revocation_strategy: JwtDenylist
   after_create :welcome_send
 
@@ -15,6 +15,7 @@ class User < ApplicationRecord
   def welcome_send
     UserMailer.welcome_email(self).deliver_now
   end
+
   def generate_password_token!
     self.reset_password_token = generate_token
     self.reset_password_sent_at = Time.now.utc
