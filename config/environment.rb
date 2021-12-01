@@ -1,9 +1,9 @@
 # Load the Rails application.
 require_relative "application"
 ActionMailer::Base.smtp_settings = {
-  :user_name => 'apikey', # This is the string literal 'apikey', NOT the ID of your API key
-  :password => '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', # This is the secret sendgrid API key which was issued during API key creation
-  :domain => 'hotmail.fr',
+  :user_name =>ENV["SENDGRID_LOGIN"], # This is the string literal 'apikey', NOT the ID of your API key
+  :password => ENV["SENDGRID_PWD"], # This is the secret sendgrid API key which was issued during API key creation
+  :domain => 'gmail.com',
   :address => 'smtp.sendgrid.net',
   :port => 587,
   :authentication => :plain,

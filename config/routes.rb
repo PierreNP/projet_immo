@@ -15,5 +15,7 @@ Rails.application.routes.draw do
   namespace :admin do
     resources :listings, :users, :places
   end
+  post 'passwords/forgot', to: 'passwords#forgot'
+  post 'passwords/reset/:token', to: 'passwords#reset'
 
 end
