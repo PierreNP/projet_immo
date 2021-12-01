@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   devise_for :users,
              controllers: {
                  sessions: 'users/sessions',
-                 registrations: 'users/registrations'
+                 registrations: 'users/registrations',
              }
   resources :users
   post 'rails/active_storage/direct_uploads', to: 'direct_uploads#create'
