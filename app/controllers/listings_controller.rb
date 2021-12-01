@@ -59,7 +59,7 @@ class ListingsController < ApplicationController
       end 
     end 
     if @listing.save
-      UserMailer.listing_confirmation(current_user, @listing).deliver_now
+      # UserMailer.listing_confirmation(current_user, @listing).deliver_now
       render json: {listing:@listing, place: @place, amenity:@amenity, images:@listing_images}, status: :created, location: @listing
     else
       render json: @listing.errors, status: :unprocessable_entity
