@@ -12,7 +12,7 @@ const handleSubmit = (files, listing) => {
               if(error){
                 console.log(error)
               }else{
-                fetch(`http://localhost:3000/posts/${listing.id}`, {
+                fetch(`https://thp-immo-api.herokuapp.com/posts/${listing.id}`, {
                         method: 'PUT',
                         headers: {
                           'Authorization': "TOKEN",

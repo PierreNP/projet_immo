@@ -4,8 +4,11 @@ class Users::SessionsController < Devise::SessionsController
   private
 
   def respond_with(resource, _opts = {})
-    puts resource 
+    puts resource.email
     @user = User.find_by(email:resource.email)
+    puts @user.email
+    puts @user.encrypted_password
+    puts resource.encrypted_password
     if(@user && @user.encrypted_password == resource.encrypted_password)
       render json: { user:@user, message: 'You are logged in.' }, status: :ok
     elsif(@user || resource.email && resource.password)
