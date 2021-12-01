@@ -10,6 +10,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def register_success(resource)
+    
     render json: { user:resource, message: 'Signed up sucessfully.' }
   end
 

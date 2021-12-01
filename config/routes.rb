@@ -17,5 +17,5 @@ Rails.application.routes.draw do
   end
   post 'passwords/forgot', to: 'passwords#forgot'
   post 'passwords/reset/:token', to: 'passwords#reset'
-
+  post 'passwords/update', to: 'passwords#update'
 end

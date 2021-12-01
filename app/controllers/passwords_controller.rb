@@ -1,4 +1,5 @@
 class PasswordsController < ApplicationController
+  before_action :authenticate_user!, only: [:update]
   def forgot
     if params[:email].blank?
       return render json: {error: 'Email not present'}
@@ -33,4 +34,11 @@ class PasswordsController < ApplicationController
       render json: {error:  ['Link not valid or expired. Try generating a new link.']}, status: :not_found
     end
   end
+  def update
+    # Voir si on controle le current password 
+    if params[:password].blank?
+      return render json: {error: 'New password not present'}
+    end
+    current_user.update(password: params[:password])
+  end 
 end 
