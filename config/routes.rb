@@ -2,6 +2,10 @@ Rails.application.routes.draw do
   resources :places
   get 'avatars/create'
   resources :listings
+
+  resources :users do
+    resources :listings
+  end
   
   devise_for :users,
              controllers: {
