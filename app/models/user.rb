@@ -4,7 +4,7 @@ class User < ApplicationRecord
   devise :database_authenticatable,
   :jwt_authenticatable, :registerable, 
   jwt_revocation_strategy: JwtDenylist
-  after_create :welcome_send
+  # after_create :welcome_send
 
   
   has_many :listings, foreign_key: 'landlord_id', dependent: :destroy, inverse_of: "landlord"

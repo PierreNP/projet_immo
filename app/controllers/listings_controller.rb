@@ -81,7 +81,7 @@ class ListingsController < ApplicationController
       @listing.images.each do |image|
         @listing_images << rails_blob_path(image)
       end 
-      UserMailer.listing_update(current_user, @listing).deliver_now
+      # UserMailer.listing_update(current_user, @listing).deliver_now
       render json: {listing:@listing, place:@listing.place, amenity:@listing.place.amenities , images:@listing_images}
     elsif @listing.landlord != current_user
       render json: { message: "You are not author of this listing !"}, status: :unauthorized
@@ -94,7 +94,7 @@ class ListingsController < ApplicationController
   def destroy
     if @listing.landlord == current_user
       @listing.destroy
-      UserMailer.listing_delete(current_user, @listing).deliver_now
+      # UserMailer.listing_delete(current_user, @listing).deliver_now
       render json: { message: "The listing has been successfully deleted ! "}
     else 
       render json: { message: "You are not landlord of this listing, you can't delete it !"}, status: :unauthorized
