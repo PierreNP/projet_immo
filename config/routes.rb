@@ -8,7 +8,7 @@ Rails.application.routes.draw do
                  sessions: 'users/sessions',
                  registrations: 'users/registrations',
              }
-  post 'rails/active_storage/direct_uploads', to: 'direct_uploads#create'
+  
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 
   namespace :admin do
@@ -20,4 +20,6 @@ Rails.application.routes.draw do
   post 'passwords/forgot', to: 'passwords#forgot'
   post 'passwords/reset/:token', to: 'passwords#reset'
   post 'passwords/update', to: 'passwords#update'
+  post 'rails/active_storage/direct_uploads', to: 'direct_uploads#create'
+  post 'rails/active_storage/delete', to: 'direct_uploads#destroy'
 end
