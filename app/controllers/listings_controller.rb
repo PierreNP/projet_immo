@@ -13,7 +13,7 @@ class ListingsController < ApplicationController
         listing.images.each do |image|
           @listing_images << rails_blob_path(image)
         end 
-        @listings_with_informations << {listing: listing, place:listing.place, amenity:listing.place.amenities, images: @listing_images}
+        @listings_with_informations << {listing: listing, place:listing.place, amenity:listing.place.amenities[0], images: @listing_images}
       end 
       render json: @listings_with_informations
       else  
@@ -27,7 +27,7 @@ class ListingsController < ApplicationController
         listing.images.each do |image|
           @listing_images << rails_blob_path(image)
         end 
-        @listings_with_informations << {listing: listing, place:listing.place, amenity:listing.place.amenities, landlord: listing.landlord, images: @listing_images}
+        @listings_with_informations << {listing: listing, place:listing.place, amenity:listing.place.amenities[0], landlord: listing.landlord, images: @listing_images}
       end 
       render json: @listings_with_informations
     end 
@@ -39,7 +39,7 @@ class ListingsController < ApplicationController
     @listing.images.each do |image|
       @listing_images << rails_blob_path(image)
     end 
-    render json: {listing:@listing, place: @listing.place, amenity:@listing.place.amenities, landlord:@listing.landlord, images:@listing_images}
+    render json: {listing:@listing, place: @listing.place, amenity:@listing.place.amenities[0], landlord:@listing.landlord, images:@listing_images}
   end
 
   # POST /listings
