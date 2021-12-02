@@ -9,8 +9,9 @@ TableJointPlaceAmenity.destroy_all
 admin_user = User.create(email:"admin@admin.com", password:"123456", first_name:"Stephane", last_name:"Plaza", username:"superplaza", is_admin:true)
 
 tab_place = ["studio", "small_apartment", "big_apartment", "small_house", "big_house"]
-user = User.create(email:"admin@yopmail.com", password:"123456", first_name:Faker::Name.first_name, last_name:Faker::Name.last_name, username:Faker::Internet.username, is_admin:false)
+
 30.times do |i|
+  user = User.create(email:"email#{i}@gmail.com", password:"123456", first_name:Faker::Name.first_name, last_name:Faker::Name.last_name, username:Faker::Internet.username, is_admin:false)
   [1,1,1,1,1,2][rand(0..5)].times do
     place = Place.create(place_type:tab_place[rand(0..tab_place.length - 1)], surface:rand(15..200), story:rand(0..6), location:Faker::Address.street_address)
     listing = Listing.create(landlord:user, place:place, title:"Amazing place to sell! #{i}", description:"description of place #{i}", price:place.surface*rand(7..13)*1000)
