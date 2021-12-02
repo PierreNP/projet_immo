@@ -8,6 +8,10 @@ class PasswordsController < ApplicationController
 
     if @user.present? 
       @user.generate_password_token!
+      puts "*" * 100
+      puts @user
+      puts @user.reset_password_token
+      puts "*" * 100
       UserMailer.reset_password(@user).deliver_now
       render json: {status: 'ok'}, status: :ok
     else
@@ -17,13 +21,14 @@ class PasswordsController < ApplicationController
 
   def reset
     token = params[:token].to_s
-
-    if params[:email].blank?
-      return render json: {error: 'Token not present'}
-    end
-
+    
     user = User.find_by(reset_password_token: token)
-
+    puts "*" * 100
+    puts params
+    puts user.reset_password_token
+    puts user.email
+    puts token
+    puts "*" * 100
     if user.present? && user.password_token_valid?
       if user.reset_password!(params[:password])
         render json: {status: 'ok'}, status: :ok

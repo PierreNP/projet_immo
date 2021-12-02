@@ -12,7 +12,7 @@ class UserMailer < ApplicationMailer
   end
   def reset_password(user)
     @user = user 
-    @url = "https://thp-immo-api.herokuapp.com/passwords/reset/#{user.reset_password_token}"
+    @url = "http://localhost:3000/accountResetPassword/#{user.reset_password_token}"
     mail(to: @user.email, subject: "Mot de passe oublié")
   end 
   def listing_confirmation(user, listing)
